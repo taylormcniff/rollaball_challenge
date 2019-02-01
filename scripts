@@ -1,0 +1,163 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class CameraController : MonoBehaviour {
+
+    public GameObject player;
+
+    private Vector3 offset;
+
+	// Use this for initialization
+	void Start () {
+        offset = transform.position - player.transform.position;
+	}
+	
+	// Update is called once per frame
+	void LateUpdate () {
+        transform.position = player.transform.position + offset; 
+	}
+}
+
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI; 
+using UnityEngine;
+
+public class PlayerController : MonoBehaviour
+{
+
+    public float speed;
+    public Text countText;
+    public Text winText;
+    public Text scoreText;
+
+    private Rigidbody rb;
+    private int count;
+    private int score;
+
+    void Start()
+    {
+        rb = GetComponent<Rigidbody>();
+        count = 0;
+        score = 3;
+        SetCountText();
+        SetScoreText();
+        DestroyComponent();
+        winText.text = "";
+    }
+
+    void FixedUpdate()
+    {
+        float moveHorizontal = Input.GetAxis("Horizontal");
+        float moveVertical = Input.GetAxis("Vertical");
+
+        Vector3 movement = new Vector3(moveHorizontal, 0.0f, moveVertical);
+
+        rb.AddForce(movement * speed);
+
+        if (Input.GetKey("escape"))
+        { Application.Quit(); }
+
+        if (count == 12)
+        {
+           SceneManager.LoadScene("level2");
+        }
+
+    }
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("Pick Up"))
+        {
+            other.gameObject.SetActive(false);
+            count = count + 1;
+            SetCountText();
+        }
+
+        if (other.gameObject.CompareTag("Enemy"))
+        {
+            other.gameObject.SetActive(false);
+            score = score - 1;
+            SetScoreText();
+        }
+    }
+    void SetCountText()
+    {
+        countText.text = "Count: " + count.ToString();
+        if (count == 9)
+        {
+            winText.text = "You win!";
+        }
+    }
+
+    void SetScoreText()
+    {
+        scoreText.text = "Lives: " + score.ToString();
+        if (score == 0)
+        {
+            winText.text = "You lose!";
+            DestroyComponent();
+        }
+    }
+
+    void DestroyComponent()
+    {
+        if (score == 0)
+        {
+            Destroy(GetComponent<Rigidbody>());
+        }
+    }using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Rotator : MonoBehaviour {
+
+	// Update is called once per frame
+	void Update () {
+        transform.Rotate (new Vector3(15, 30, 45) * Time.deltaTime);
+	}
+}
+
+}
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class ObstacleController : MonoBehaviour {
+
+    public float min = 2f;
+    public float max = 16f;
+
+    void Start()
+    { 
+        min = transform.position.x;
+        max = transform.position.x + 16;
+    }
+    void Update()
+    { 
+      transform.position = new Vector3(Mathf.PingPong(Time.time* 5, max - min) + min, transform.position.y, transform.position.z);
+    }
+}
+
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class ObstacleController_Level2 : MonoBehaviour {
+
+        public float min = 2f;
+        public float max = 5f;
+
+        void Start()
+        {
+            min = transform.position.x;
+            max = transform.position.x + 5;
+        }
+        void Update()
+        {
+            transform.position = new Vector3(Mathf.PingPong(Time.time * 5, max - min) + min, transform.position.y, transform.position.z);
+        }
+    }
+
+
