@@ -1,0 +1,174 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI; 
+using UnityEngine;
+
+public class PlayerController_level1: MonoBehaviour
+{
+
+    public float speed;
+    public Text countText;
+    public Text winText;
+    public Text scoreText;
+
+    private Rigidbody rb;
+    private int count;
+    private int score;
+
+    void Start()
+    {
+        rb = GetComponent<Rigidbody>();
+        count = 0;
+        score = 3;
+        SetCountText();
+        SetScoreText();
+        DestroyComponent();
+        winText.text = "";
+    }
+
+    void FixedUpdate()
+    {
+        float moveHorizontal = Input.GetAxis("Horizontal");
+        float moveVertical = Input.GetAxis("Vertical");
+
+        Vector3 movement = new Vector3(moveHorizontal, 0.0f, moveVertical);
+
+        rb.AddForce(movement * speed);
+
+        if (Input.GetKey("escape"))
+        { Application.Quit(); }
+
+        if (count == 6)
+        {
+           SceneManager.LoadScene("level2");
+        }
+
+    }
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("Pick Up"))
+        {
+            other.gameObject.SetActive(false);
+            count = count + 1;
+            SetCountText();
+        }
+
+        if (other.gameObject.CompareTag("Enemy"))
+        {
+            other.gameObject.SetActive(false);
+            score = score - 1;
+            SetScoreText();
+        }
+    }
+    void SetCountText()
+    {
+        countText.text = "Count: " + count.ToString();
+        if (count == 9)
+        {
+            winText.text = "You win!";
+        }
+    }
+
+    void SetScoreText()
+    {
+        scoreText.text = "Lives: " + score.ToString();
+        if (score == 0)
+        {
+            winText.text = "You lose!";
+            DestroyComponent();
+        }
+    }
+
+    void DestroyComponent()
+    {
+        if (score == 0)
+        {
+            Destroy(GetComponent<Rigidbody>());
+        }
+    }
+}
+
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class PlayerController_Level2 : MonoBehaviour {
+
+    public float speed;
+    public Text countText;
+    public Text winText;
+    public Text scoreText;
+
+    private Rigidbody rb;
+    private int count;
+    private int score;
+
+    void Start()
+    {
+        rb = GetComponent<Rigidbody>();
+        count = 0;
+        score = 3;
+        SetCountText();
+        SetScoreText();
+        DestroyComponent();
+        winText.text = "";
+    }
+
+    void FixedUpdate()
+    {
+        float moveHorizontal = Input.GetAxis("Horizontal");
+        float moveVertical = Input.GetAxis("Vertical");
+
+        Vector3 movement = new Vector3(moveHorizontal, 0.0f, moveVertical);
+
+        rb.AddForce(movement * speed);
+
+        if (Input.GetKey("escape"))
+        { Application.Quit(); }
+
+    }
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("Pick Up"))
+        {
+            other.gameObject.SetActive(false);
+            count = count + 1;
+            SetCountText();
+        }
+
+        if (other.gameObject.CompareTag("Enemy"))
+        {
+            other.gameObject.SetActive(false);
+            score = score - 1;
+            SetScoreText();
+        }
+    }
+    void SetCountText()
+    {
+        countText.text = "Count: " + count.ToString();
+        if (count == 9)
+        {
+            winText.text = "You win!";
+        }
+    }
+
+    void SetScoreText()
+    {
+        scoreText.text = "Lives: " + score.ToString();
+        if (score == 0)
+        {
+            winText.text = "You lose!";
+            DestroyComponent();
+        }
+    }
+
+    void DestroyComponent()
+    {
+        if (score == 0)
+        {
+            Destroy(GetComponent<Rigidbody>());
+        }
+    }
+}
